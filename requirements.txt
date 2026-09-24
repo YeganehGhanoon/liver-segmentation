@@ -1,0 +1,10 @@
+shiny
+shinyswatch
+tensorflow
+numpy
+pandas
+matplotlib
+scipy
+scikit-image
+Pillow
+pydicom
