@@ -50,6 +50,7 @@ except Exception as e:
     raise
 
 model = load_model(MODEL_PATH, compile=False)
+
 # ================== عکس کبد ==================
 def _load_liver_logo() -> str:
     candidates = [
@@ -215,7 +216,9 @@ TEXT = {
         "about_version": "Version",
         "about_version_value": "1.0.0",
         "about_year": "Year",
-        "about_year_value": "2024 – 2026",
+        "about_year_value": "2026",
+        "about_commissioned_line1": "Commissioned by the Radiotherapy &amp; Oncology Center, Imam Reza Hospital (AS), Mashhad",
+        "about_commissioned_line2": "in collaboration with University of Neyshabur",
     },
     "fa": {
         "please_upload": "لطفاً فایل‌های DICOM را بارگذاری کرده و روی دکمه «اجرای تقسیم‌بندی» کلیک کنید.",
@@ -334,7 +337,9 @@ TEXT = {
         "about_version": "نسخه",
         "about_version_value": "1.0.0",
         "about_year": "سال",
-        "about_year_value": "۱۴۰۳ – ۱۴۰۵",
+        "about_year_value": "۲۰۲۶",
+        "about_commissioned_line1": "به سفارش مرکز رادیوتراپی و انکولوژی بیمارستان امام رضا (ع) مشهد",
+        "about_commissioned_line2": "با همکاری دانشگاه نیشابور",
     },
 }
 
@@ -343,6 +348,14 @@ def bilingual(en_text: str, fa_text: str):
     return ui.HTML(
         f'<span class="en-text">{html_lib.escape(en_text)}</span>'
         f'<span class="fa-text">{html_lib.escape(fa_text)}</span>'
+    )
+
+
+def bilingual_raw(en_text: str, fa_text: str):
+    """Like bilingual() but does NOT escape — for trusted HTML (e.g. with <br>)."""
+    return ui.HTML(
+        f'<span class="en-text">{en_text}</span>'
+        f'<span class="fa-text">{fa_text}</span>'
     )
 
 
@@ -536,6 +549,9 @@ ICON_TIME = """<svg viewBox="0 0 24 24" width="16" height="16" fill="none"
 
 # ================== CSS ==================
 CSS = """
+@import url('https://cdn.jsdelivr.net/gh/rastikerdar/nazanin-font@v1.0.0/dist/font-face.css');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500;1,700&display=swap');
+
 :root {
     --slate-50:  #f8fafc; --slate-100: #f1f5f9; --slate-200: #e2e8f0;
     --slate-300: #cbd5e1; --slate-400: #94a3b8; --slate-500: #64748b;
@@ -629,6 +645,23 @@ body {
     font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 .container-fluid { background-color: var(--bg-body); padding: 18px 22px; }
+
+/* ============ Persian (Nazanin) Font ============ */
+body.lang-fa,
+body.lang-fa *:not(svg):not(svg *) {
+    font-family: 'Nazanin', 'B Nazanin', 'IRANNazanin', 'Vazirmatn',
+                 Tahoma, Arial, sans-serif !important;
+}
+body.lang-fa .splash-title {
+    font-family: 'Nazanin', 'B Nazanin', 'IRANNazanin',
+                 'Playfair Display', Georgia, serif !important;
+    font-weight: 800;
+}
+body.lang-fa .splash-quote {
+    font-family: 'Nazanin', 'B Nazanin', 'IRANNazanin',
+                 Georgia, serif !important;
+    font-style: normal;
+}
 
 /* ============ HEADER ============ */
 .app-header {
@@ -1568,7 +1601,7 @@ body.lang-fa .dicom-info-strip { flex-direction: row-reverse; }
     background: #0f172a;
     padding: 18px;
     display: flex; align-items: center; justify-content: center;
-    width: 100%; min-height: 200px;
+    width: 100%; min-height: 300px;
     overflow: hidden; position: relative; cursor: default;
 }
 .result-panel-image .shiny-html-output {
@@ -1593,17 +1626,149 @@ body.lang-fa .dicom-info-strip { flex-direction: row-reverse; }
     text-align: center; padding: 60px 20px;
     font-style: italic; max-width: 380px;
 }
-.result-panel-image { min-height: 380px; }
 .result-panel:fullscreen {
     background: #000;
     width: 100vw; height: 100vh;
     display: flex; flex-direction: column;
     border-radius: 0;
 }
+.result-panel:fullscreen .result-panel-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto;
+}
 .result-panel:fullscreen .result-panel-image {
     flex: 1; min-height: 0; border-radius: 0;
 }
 .result-panel:fullscreen img.slice-img { max-width: none; max-height: 100%; }
+
+/* === بدنهٔ پنل نتیجه: تصویر + راهنمای رنگ کنار هم === */
+.result-panel-body {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0;
+    flex: 1 1 auto;
+    min-height: 0;
+    background: #0f172a;
+    /* ارتفاع ثابت تا هر چهار پنل هم‌اندازه شوند */
+    height: 400px;
+}
+
+.result-panel-body .result-panel-image {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0f172a;
+    overflow: hidden;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.result-panel-body .result-panel-image .shiny-html-output {
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden;
+}
+
+/* === تصویر CT: کاملاً دیده شود و متناسب با پنل مقیاس بگیرد === */
+.result-panel-body img.slice-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;       /* ← نمایش کامل بدون برش */
+    object-position: center;
+    border-radius: 6px;
+    background: transparent;
+    transform-origin: center center;
+    transition: transform 0.15s ease-out;
+    will-change: transform;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: auto;
+}
+
+/* === راهنمای رنگ کنار تصویر — عرض و ارتفاع ثابت === */
+.result-panel-legend-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 12px;
+    width: 148px;
+    min-width: 148px;
+    max-width: 148px;
+    flex: 0 0 148px;           /* ← جلوگیری از تغییر عرض */
+    box-sizing: border-box;
+    border-left: 1px solid #1e293b;
+    background: linear-gradient(180deg,
+                rgba(2, 6, 23, 0.75) 0%,
+                rgba(15, 23, 42, 0.90) 100%);
+}
+body.lang-fa .result-panel-legend-side {
+    border-left: none;
+    border-right: 1px solid #1e293b;
+}
+
+.result-panel-legend-side .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #cbd5e1;
+    letter-spacing: 0.2px;
+    line-height: 1.25;
+    white-space: nowrap;
+    width: 100%;
+}
+.result-panel-legend-side .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+/* === واکنش‌گرا: در عرض‌های کم، راهنما زیر تصویر می‌رود === */
+@media (max-width: 900px) {
+    .result-panel-body {
+        flex-direction: column;
+        height: auto;
+    }
+    .result-panel-legend-side {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        border-left: none;
+        border-top: 1px solid #1e293b;
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+        flex: 0 0 auto;
+        padding: 10px 12px;
+    }
+    body.lang-fa .result-panel-legend-side {
+        border-right: none;
+    }
+    .result-panel-legend-side .legend-item {
+        width: auto;
+    }
+}
 
 /* ============ FILMSTRIP ============ */
 .filmstrip-section {
@@ -2123,22 +2288,48 @@ body.theme-dark  .splash-blob-2 { background: rgba(251, 113, 133, 0.18); }
     0%   { opacity: 0; transform: translateY(18px) scale(0.94); }
     100% { opacity: 1; transform: translateY(0)    scale(1); }
 }
+
+/* ----- Title with gradient (fixed descender clipping) ----- */
 .splash-title {
-    font-size: 2.9rem;
-    font-weight: 800;
+    font-family: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
+    font-size: 4.2rem;
+    font-weight: 900;
     margin: 0;
-    letter-spacing: 0.4px;
-    line-height: 1.15;
+    letter-spacing: 0.8px;
+    line-height: 1.35;
+    display: inline-block;
+    padding: 6px 20px 26px 20px;
+    overflow: visible;
     transition: color 0.35s ease;
+    background: linear-gradient(135deg, #0891b2 0%, #06b6d4 45%, #22d3ee 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    text-shadow: 0 4px 30px rgba(8, 145, 178, 0.25);
 }
+.splash-title .en-text,
+.splash-title .fa-text {
+    display: inline-block;
+    padding-bottom: 6px;
+    line-height: 1.35;
+}
+
 body.theme-light .splash-title {
-    color: #0c4a6e;
-    text-shadow: 0 2px 24px rgba(8, 145, 178, 0.25);
+    background: linear-gradient(135deg, #0c4a6e 0%, #0e7490 45%, #0891b2 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
+
 body.theme-dark .splash-title {
-    color: #ffffff;
-    text-shadow: 0 2px 28px rgba(34, 211, 238, 0.45);
+    background: linear-gradient(135deg, #67e8f9 0%, #22d3ee 45%, #ffffff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 4px 30px rgba(34, 211, 238, 0.55));
 }
+
 .splash-subtitle {
     font-size: 1.05rem;
     font-weight: 500;
@@ -2148,10 +2339,14 @@ body.theme-dark .splash-title {
 }
 body.theme-light .splash-subtitle { color: #0891b2; }
 body.theme-dark  .splash-subtitle { color: #a5f3fc; }
+.splash-content .splash-subtitle {
+    margin-bottom: -6px;
+    margin-top: 4px;
+}
 .splash-gallery {
     position: relative;
-    width: min(620px, 68vmin);
-    height: min(620px, 68vmin);
+    width: min(440px, 52vmin);
+    height: min(440px, 52vmin);
     margin-top: 16px;
     margin-bottom: 14px;
     display: flex;
@@ -2292,7 +2487,7 @@ body.theme-dark .splash-gallery-dots span.active {
     100% { opacity: 1; transform: translateY(0);   letter-spacing: normal; }
 }
 .splash-quote-divider {
-    width: 140px;
+    width: 180px;
     height: 2px;
     border-radius: 2px;
     opacity: 0.75;
@@ -2305,14 +2500,14 @@ body.theme-light .splash-quote-divider { color: #0891b2; }
 body.theme-dark  .splash-quote-divider { color: #22d3ee; }
 .splash-quote {
     font-family: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
-    font-size: 1.5rem;
+    font-size: 2.15rem;
     font-weight: 500;
     font-style: italic;
     letter-spacing: 0.4px;
     line-height: 1.4;
     margin: 0;
     padding: 0 16px;
-    max-width: 700px;
+    max-width: 820px;
     text-align: center;
     position: relative;
     transition: color 0.35s ease, text-shadow 0.35s ease;
@@ -2329,15 +2524,15 @@ body.theme-dark .splash-quote {
 .splash-quote::before,
 .splash-quote::after {
     font-family: 'Playfair Display', 'Georgia', serif;
-    font-size: 2.4rem;
+    font-size: 3rem;
     line-height: 0;
     position: relative;
     top: 0.38em;
     opacity: 0.55;
     font-style: normal;
 }
-.splash-quote::before { content: '\\201C'; margin-right: 8px; }
-.splash-quote::after  { content: '\\201D'; margin-left: 8px; }
+.splash-quote::before { content: '\\201C'; margin-right: 10px; }
+.splash-quote::after  { content: '\\201D'; margin-left: 10px; }
 .splash-loader {
     width: min(340px, 70vw);
     height: 6px;
@@ -2400,25 +2595,27 @@ body.theme-dark  .splash-dots span { background: #22d3ee; }
     40%           { transform: scale(1);   opacity: 1; }
 }
 @media (max-width: 720px) {
-    .splash-title { font-size: 1.9rem; }
+    .splash-title { font-size: 2.8rem; letter-spacing: 0.4px; padding: 4px 14px 20px 14px; }
     .splash-subtitle { font-size: 0.9rem; }
     .splash-gallery {
-        width: min(440px, 74vmin);
-        height: min(440px, 74vmin);
+        width: min(320px, 58vmin);
+        height: min(320px, 58vmin);
     }
-    .splash-gallery-item { border-radius: 32px; }
-    .splash-gallery-item::after { border-radius: 28px; }
-    .splash-quote { font-size: 1.15rem; padding: 0 10px; }
+    .splash-gallery-item { border-radius: 26px; }
+    .splash-gallery-item::after { border-radius: 22px; }
+    .splash-quote { font-size: 1.6rem; padding: 0 10px; }
+    .splash-quote-divider { width: 140px; }
 }
 @media (max-width: 480px) {
-    .splash-title { font-size: 1.6rem; }
+    .splash-title { font-size: 2.2rem; letter-spacing: 0.2px; padding: 4px 10px 16px 10px; }
     .splash-gallery {
-        width: min(320px, 82vmin);
-        height: min(320px, 82vmin);
+        width: min(240px, 64vmin);
+        height: min(240px, 64vmin);
     }
-    .splash-gallery-item { border-radius: 24px; }
-    .splash-gallery-item::after { border-radius: 20px; }
-    .splash-quote { font-size: 1rem; }
+    .splash-gallery-item { border-radius: 20px; }
+    .splash-gallery-item::after { border-radius: 16px; }
+    .splash-quote { font-size: 1.3rem; }
+    .splash-quote-divider { width: 110px; }
 }
 
 /* ============ ABOUT PAGE (Enhanced) ============ */
@@ -2583,6 +2780,78 @@ body.theme-dark .about-description {
     background: rgba(34, 211, 238, 0.06);
     border-left-color: #22d3ee;
     color: #e2e8f0;
+}
+.about-commissioned {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 24px;
+    margin: 0 0 26px 0;
+    border-radius: 14px;
+    background: linear-gradient(135deg,
+                rgba(6, 182, 212, 0.08) 0%,
+                rgba(139, 92, 246, 0.08) 100%);
+    border: 1px solid rgba(6, 182, 212, 0.28);
+    color: var(--text-main);
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.75;
+    letter-spacing: 0.3px;
+    box-shadow: 0 4px 18px rgba(8, 145, 178, 0.08);
+    transition: all 0.3s ease;
+}
+.about-commissioned:hover {
+    border-color: rgba(6, 182, 212, 0.55);
+    box-shadow: 0 8px 26px rgba(8, 145, 178, 0.16);
+    transform: translateY(-1px);
+}
+body.theme-dark .about-commissioned {
+    background: linear-gradient(135deg,
+                rgba(34, 211, 238, 0.10) 0%,
+                rgba(139, 92, 246, 0.12) 100%);
+    border-color: rgba(34, 211, 238, 0.40);
+    box-shadow: 0 4px 22px rgba(34, 211, 238, 0.14);
+}
+body.theme-dark .about-commissioned:hover {
+    border-color: rgba(34, 211, 238, 0.75);
+    box-shadow: 0 8px 30px rgba(34, 211, 238, 0.28);
+}
+.about-commissioned svg {
+    color: var(--brand-600);
+    flex-shrink: 0;
+    width: 26px !important;
+    height: 26px !important;
+    filter: drop-shadow(0 2px 6px rgba(8, 145, 178, 0.30));
+}
+body.theme-dark .about-commissioned svg {
+    color: #22d3ee;
+    filter: drop-shadow(0 2px 8px rgba(34, 211, 238, 0.55));
+}
+.about-commissioned .commissioned-text {
+    flex: 1;
+    min-width: 0;
+}
+.about-commissioned .commissioned-text .en-text,
+.about-commissioned .commissioned-text .fa-text {
+    display: inline-block;
+    line-height: 1.85;
+}
+/* In Persian, keep icon on the right (RTL natural flow) */
+body.lang-fa .about-commissioned {
+    flex-direction: row;
+    text-align: right;
+    font-size: 1.25rem;
+    direction: rtl;
+}
+.about-commissioned .en-text,
+.about-commissioned .fa-text {
+    display: inline;
+}
+.about-commissioned .en-text span.line,
+.about-commissioned .fa-text span.line {
+    display: block;
 }
 .about-grid {
     position: relative;
@@ -2887,104 +3156,6 @@ body.theme-dark input[type="text"] {
     color: var(--text-main) !important;
 }
 body.theme-dark .shiny-input-container label { color: var(--text-main); }
-
-
-
-
-/* ============ Compact Result Panels (v2) ============ */
-
-/* ارتفاع ثابت و کوچیک برای همه پنل‌ها */
-.result-panel-image {
-    min-height: 180px !important;
-    max-height: 220px !important;
-    padding: 10px !important;
-}
-
-/* متن خالی کوچیک‌تر */
-.slice-error {
-    padding: 20px 12px !important;
-    font-size: 0.85rem !important;
-    max-width: 100% !important;
-}
-
-.result-panel {
-    min-height: auto !important;
-}
-
-/* ====== هدر پنل: اجازه بده در صورت نیاز دو خطی بشه ====== */
-.result-panel-header {
-    min-height: 40px !important;
-    padding: 8px 12px !important;
-    flex-wrap: wrap !important;
-    gap: 6px !important;
-    row-gap: 4px !important;
-}
-
-.result-panel-title {
-    font-size: 0.88rem !important;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-
-/* ====== راهنما (legend): اجازه بده بشکنه و کوچیک بشه ====== */
-.result-panel-legend {
-    gap: 5px !important;
-    flex-wrap: wrap !important;
-    overflow: visible !important;
-    justify-content: flex-end !important;
-    flex: 1 1 auto;
-    min-width: 0;
-}
-.legend-item {
-    font-size: 0.65rem !important;
-    gap: 3px !important;
-    flex-shrink: 0;
-    white-space: nowrap;
-}
-.legend-dot {
-    width: 7px !important;
-    height: 7px !important;
-}
-
-/* روی صفحه‌های باریک، راهنما بره زیر عنوان */
-@media (max-width: 1400px) {
-    .result-panel-legend {
-        justify-content: flex-start !important;
-    }
-    .legend-item {
-        font-size: 0.62rem !important;
-    }
-}
-
-/* سایدبار */
-.sidebar {
-    width: clamp(260px, 25vw, 340px) !important;
-}
-
-/* هدر اپ */
-.app-header {
-    min-height: auto !important;
-    padding: 18px 80px 18px 24px !important;
-}
-.header-liver-icon {
-    width: clamp(48px, 5vw, 72px) !important;
-    height: clamp(48px, 5vw, 72px) !important;
-}
-.app-header h1 {
-    font-size: clamp(1.2rem, 2.4vw, 1.9rem) !important;
-}
-
-/* نمای سه‌بعدی */
-.view3d-canvas-wrap,
-.view3d-empty {
-    min-height: clamp(320px, 50vh, 560px) !important;
-}
-
-/* گالری اسپلش */
-.splash-gallery {
-    width: clamp(240px, 50vmin, 520px) !important;
-    height: clamp(240px, 50vmin, 520px) !important;
-}
 """
 
 
@@ -3534,14 +3705,14 @@ SPLASH_HTML = f"""
     <div class="splash-blob splash-blob-1"></div>
     <div class="splash-blob splash-blob-2"></div>
     <div class="splash-content">
-        <h1 class="splash-title">
-            <span class="en-text">Liver Segmentation</span>
-            <span class="fa-text">تقسیم‌بندی کبد</span>
-        </h1>
         <p class="splash-subtitle">
             <span class="en-text">{TEXT['en']['splash_welcome']} · {TEXT['en']['splash_subtitle']}</span>
             <span class="fa-text">{TEXT['fa']['splash_welcome']} · {TEXT['fa']['splash_subtitle']}</span>
         </p>
+        <h1 class="splash-title">
+            <span class="en-text">Liver Segmentation</span>
+            <span class="fa-text">تقسیم‌بندی کبد</span>
+        </h1>
 
         <div class="splash-gallery">
             {_gallery_items_html}
@@ -3579,16 +3750,28 @@ SPLASH_HTML = f"""
 def _result_panel(title_en: str, title_fa: str,
                   slice_lbl_id: str, plot_id: str,
                   legend_id: str = None):
+    # --- هدر فقط شامل عنوان و دکمهٔ بستن ---
     header_items = [
         ui.div(bilingual(title_en, title_fa), class_="result-panel-title"),
+        ui.HTML('<button type="button" class="result-panel-close">×</button>'),
+    ]
+
+    # --- بدنه: تصویر + راهنمای رنگ در کنار هم ---
+    body_children = [
+        ui.div(
+            ui.output_ui(plot_id),
+            class_="result-panel-image"
+        ),
     ]
     if legend_id is not None:
-        header_items.append(
-            ui.div(ui.output_ui(legend_id), class_="result-panel-legend")
+        body_children.append(
+            ui.div(
+                ui.output_ui(legend_id),
+                class_="result-panel-legend-side"
+            )
         )
-    header_items.append(
-        ui.HTML('<button type="button" class="result-panel-close">×</button>')
-    )
+
+    image_section = ui.div(*body_children, class_="result-panel-body")
 
     return ui.div(
         ui.div(
@@ -3610,10 +3793,7 @@ def _result_panel(title_en: str, title_fa: str,
             ),
             class_="result-panel-toolbar"
         ),
-        ui.div(
-            ui.output_ui(plot_id),
-            class_="result-panel-image"
-        ),
+        image_section,
         class_="result-panel"
     )
 
@@ -3892,6 +4072,29 @@ ABOUT_PAGE = ui.div(
                 TEXT["fa"]["about_description"]
             ),
             class_="about-description"
+        ),
+
+        # ---------- COMMISSIONED BY ----------
+        ui.div(
+            ui.HTML("""<svg viewBox="0 0 24 24" width="26" height="26"
+                fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                <path d="M2 17l10 5 10-5"></path>
+                <path d="M2 12l10 5 10-5"></path>
+            </svg>"""),
+            ui.div(
+                bilingual_raw(
+                    f'{TEXT["en"]["about_commissioned_line1"]}'
+                    f'<br>'
+                    f'{TEXT["en"]["about_commissioned_line2"]}',
+                    f'{TEXT["fa"]["about_commissioned_line1"]}'
+                    f'<br>'
+                    f'{TEXT["fa"]["about_commissioned_line2"]}'
+                ),
+                class_="commissioned-text"
+            ),
+            class_="about-commissioned"
         ),
 
         # ---------- 2-COLUMN GRID ----------
