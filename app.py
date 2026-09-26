@@ -2889,45 +2889,82 @@ body.theme-dark input[type="text"] {
 body.theme-dark .shiny-input-container label { color: var(--text-main); }
 
 
-/* ============ Empty panel height fix ============ */
 
-/* ارتفاع پیش‌فرض پنل نتایج رو کمتر کن */
+/* ============ Compact Result Panels ============ */
+
+/* ارتفاع ثابت و کوچیک برای همه پنل‌ها */
 .result-panel-image {
-    min-height: 240px !important;
-    padding: 14px !important;
+    min-height: 180px !important;
+    max-height: 220px !important;
+    padding: 10px !important;
 }
 
-/* وقتی داده‌ای نیست، پیام خالی کوچیک‌تر بشه */
+/* هدر یکسان برای همه پنل‌ها */
+.result-panel-header {
+    min-height: 40px !important;
+    padding: 8px 12px !important;
+    flex-wrap: nowrap !important;
+}
+
+/* متن خالی کوچیک‌تر */
 .slice-error {
-    padding: 40px 20px !important;
-    font-size: 0.92rem !important;
+    padding: 20px 12px !important;
+    font-size: 0.85rem !important;
+    max-width: 100% !important;
 }
 
-/* اسپلش وقتی خالی تو لپ‌تاپ */
-.splash-gallery {
-    width: clamp(240px, 55vmin, 560px) !important;
-    height: clamp(240px, 55vmin, 560px) !important;
+/* وقتی خالی هست، کل ارتفاع پنل کمتر بشه */
+.result-panel {
+    min-height: auto !important;
 }
 
-/* سایدبار کنترل‌شده */
+/* راهنما (legend) کوچیک‌تر و بدون شکستن خط */
+.result-panel-legend {
+    gap: 6px !important;
+    flex-wrap: nowrap !important;
+    overflow: hidden;
+}
+.legend-item {
+    font-size: 0.68rem !important;
+    gap: 3px !important;
+}
+.legend-dot {
+    width: 7px !important;
+    height: 7px !important;
+}
+.result-panel-title {
+    font-size: 0.88rem !important;
+    white-space: nowrap;
+}
+
+/* سایدبار */
 .sidebar {
-    width: clamp(260px, 25vw, 360px) !important;
+    width: clamp(260px, 25vw, 340px) !important;
 }
 
-/* هدر کمی متعادل‌تر */
+/* هدر اپ کوچیک‌تر */
 .app-header {
     min-height: auto !important;
-    padding: clamp(18px, 2vw, 26px) clamp(60px, 6vw, 90px) clamp(18px, 2vw, 26px) clamp(18px, 2vw, 30px) !important;
+    padding: 18px 80px 18px 24px !important;
 }
 .header-liver-icon {
-    width: clamp(48px, 5.5vw, 78px) !important;
-    height: clamp(48px, 5.5vw, 78px) !important;
+    width: clamp(48px, 5vw, 72px) !important;
+    height: clamp(48px, 5vw, 72px) !important;
+}
+.app-header h1 {
+    font-size: clamp(1.2rem, 2.4vw, 1.9rem) !important;
 }
 
-/* نمایش 3D */
+/* نمای سه‌بعدی */
 .view3d-canvas-wrap,
 .view3d-empty {
     min-height: clamp(320px, 50vh, 560px) !important;
+}
+
+/* گالری اسپلش */
+.splash-gallery {
+    width: clamp(240px, 50vmin, 520px) !important;
+    height: clamp(240px, 50vmin, 520px) !important;
 }
 """
 
