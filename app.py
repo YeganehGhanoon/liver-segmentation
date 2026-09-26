@@ -2887,6 +2887,91 @@ body.theme-dark input[type="text"] {
     color: var(--text-main) !important;
 }
 body.theme-dark .shiny-input-container label { color: var(--text-main); }
+
+/* ============ Zoom-safe overrides ============ */
+
+.sidebar {
+    width: clamp(260px, 25vw, 360px) !important;
+}
+
+.header-liver-icon {
+    width: clamp(48px, 5.5vw, 90px) !important;
+    height: clamp(48px, 5.5vw, 90px) !important;
+}
+
+.view3d-body {
+    grid-template-columns: clamp(240px, 24vw, 340px) 1fr !important;
+}
+
+.view3d-canvas-wrap,
+.view3d-empty {
+    min-height: clamp(340px, 55vh, 620px) !important;
+}
+
+.slice-img {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: auto !important;
+}
+
+.splash-gallery {
+    width: clamp(240px, 55vmin, 620px) !important;
+    height: clamp(240px, 55vmin, 620px) !important;
+}
+
+.splash-title {
+    font-size: clamp(1.5rem, 4vw, 2.9rem) !important;
+}
+
+.app-header h1 {
+    font-size: clamp(1.2rem, 2.6vw, 2.15rem) !important;
+}
+
+@media (min-width: 900px) {
+    .filmstrip-item img {
+        width: clamp(72px, 9vw, 130px) !important;
+        height: clamp(72px, 9vw, 130px) !important;
+    }
+    .filmstrip-ellipsis {
+        width: clamp(72px, 9vw, 130px) !important;
+        height: clamp(72px, 9vw, 130px) !important;
+    }
+}
+
+body, .container-fluid, .app-header, .left-panel, .right-panel {
+    overflow-x: hidden;
+}
+
+.panel-spinner-lg {
+    width: clamp(38px, 3vw, 52px) !important;
+    height: clamp(38px, 3vw, 52px) !important;
+}
+
+.metric-card-value {
+    font-size: clamp(1.1rem, 1.6vw, 1.75rem) !important;
+}
+.metric-card-label {
+    font-size: clamp(0.72rem, 0.85vw, 0.83rem) !important;
+}
+
+.about-panel {
+    padding: clamp(22px, 3vw, 46px) !important;
+}
+.about-hero-text h2 {
+    font-size: clamp(1.4rem, 2.4vw, 2.1rem) !important;
+}
+.about-dev-name {
+    font-size: clamp(1.3rem, 2vw, 1.85rem) !important;
+}
+.about-dev-avatar {
+    width: clamp(64px, 7vw, 92px) !important;
+    height: clamp(64px, 7vw, 92px) !important;
+    font-size: clamp(1.3rem, 1.8vw, 2rem) !important;
+}
+
+.view3d-controls {
+    max-height: none !important;
+}
 """
 
 
