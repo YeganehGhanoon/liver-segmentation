@@ -29,15 +29,27 @@ except ImportError:
     _HAS_PYDICOM = False
 
 # ================== مدل ==================
-MODEL_PATH = Path(__file__).parent / "best_unet_model.h5"
-if MODEL_PATH.exists():
-    model = tf.keras.models.load_model(MODEL_PATH, compile=False)
-    print("Model loaded successfully.")
-else:
-    model = None
-    print("Warning: Model file not found at", MODEL_PATH)
+import os
+import requests
+from tensorflow.keras.models import load_model
 
+MODEL_URL = "https://github.com/YeganehGhanoon/liver-segmentation/releases/download/model-v1/best_unet_model.h5"
+MODEL_PATH = "best_unet_model.h5"
 
+try:
+    if not os.path.exists(MODEL_PATH):
+        print("Downloading model, please wait...")
+        r = requests.get(MODEL_URL, stream=True, timeout=600)
+        r.raise_for_status()  # اگر خطای HTTP بدهد، متوقف می‌شود
+        with open(MODEL_PATH, "wb") as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                f.write(chunk)
+        print("Model downloaded successfully.")
+except Exception as e:
+    print(f"Error downloading model: {e}")
+    raise
+
+model = load_model(MODEL_PATH)
 # ================== عکس کبد ==================
 def _load_liver_logo() -> str:
     candidates = [

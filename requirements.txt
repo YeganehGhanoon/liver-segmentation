@@ -1,6 +1,6 @@
 shiny
 shinyswatch
-tensorflow
+tensorflow-cpu
 numpy
 pandas
 matplotlib
@@ -8,3 +8,4 @@ scipy
 scikit-image
 Pillow
 pydicom
+requests
