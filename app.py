@@ -2890,20 +2890,14 @@ body.theme-dark .shiny-input-container label { color: var(--text-main); }
 
 
 
-/* ============ Compact Result Panels ============ */
+
+/* ============ Compact Result Panels (v2) ============ */
 
 /* ارتفاع ثابت و کوچیک برای همه پنل‌ها */
 .result-panel-image {
     min-height: 180px !important;
     max-height: 220px !important;
     padding: 10px !important;
-}
-
-/* هدر یکسان برای همه پنل‌ها */
-.result-panel-header {
-    min-height: 40px !important;
-    padding: 8px 12px !important;
-    flex-wrap: nowrap !important;
 }
 
 /* متن خالی کوچیک‌تر */
@@ -2913,28 +2907,53 @@ body.theme-dark .shiny-input-container label { color: var(--text-main); }
     max-width: 100% !important;
 }
 
-/* وقتی خالی هست، کل ارتفاع پنل کمتر بشه */
 .result-panel {
     min-height: auto !important;
 }
 
-/* راهنما (legend) کوچیک‌تر و بدون شکستن خط */
-.result-panel-legend {
+/* ====== هدر پنل: اجازه بده در صورت نیاز دو خطی بشه ====== */
+.result-panel-header {
+    min-height: 40px !important;
+    padding: 8px 12px !important;
+    flex-wrap: wrap !important;
     gap: 6px !important;
-    flex-wrap: nowrap !important;
-    overflow: hidden;
+    row-gap: 4px !important;
+}
+
+.result-panel-title {
+    font-size: 0.88rem !important;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* ====== راهنما (legend): اجازه بده بشکنه و کوچیک بشه ====== */
+.result-panel-legend {
+    gap: 5px !important;
+    flex-wrap: wrap !important;
+    overflow: visible !important;
+    justify-content: flex-end !important;
+    flex: 1 1 auto;
+    min-width: 0;
 }
 .legend-item {
-    font-size: 0.68rem !important;
+    font-size: 0.65rem !important;
     gap: 3px !important;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 .legend-dot {
     width: 7px !important;
     height: 7px !important;
 }
-.result-panel-title {
-    font-size: 0.88rem !important;
-    white-space: nowrap;
+
+/* روی صفحه‌های باریک، راهنما بره زیر عنوان */
+@media (max-width: 1400px) {
+    .result-panel-legend {
+        justify-content: flex-start !important;
+    }
+    .legend-item {
+        font-size: 0.62rem !important;
+    }
 }
 
 /* سایدبار */
@@ -2942,7 +2961,7 @@ body.theme-dark .shiny-input-container label { color: var(--text-main); }
     width: clamp(260px, 25vw, 340px) !important;
 }
 
-/* هدر اپ کوچیک‌تر */
+/* هدر اپ */
 .app-header {
     min-height: auto !important;
     padding: 18px 80px 18px 24px !important;
