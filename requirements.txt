@@ -9,3 +9,4 @@ scikit-image
 Pillow
 pydicom
 requests
+opencv-python-headless
