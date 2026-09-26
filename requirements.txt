@@ -1,6 +1,7 @@
 shiny
 shinyswatch
-tensorflow-cpu==2.12.1
+tensorflow-cpu==2.12.0
+keras==2.12.0
 numpy
 pandas
 matplotlib
@@ -10,4 +11,3 @@ Pillow
 pydicom
 requests
 opencv-python-headless
-keras==2.12.1
