@@ -49,7 +49,7 @@ except Exception as e:
     print(f"Error downloading model: {e}")
     raise
 
-model = load_model(MODEL_PATH)
+model = load_model(MODEL_PATH, compile=False)
 # ================== عکس کبد ==================
 def _load_liver_logo() -> str:
     candidates = [
